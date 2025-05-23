@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 const Index = () => {
   useEffect(() => {
-    document.title = "HealthPath Pathology Lab";
+    document.title = "The LABs Pathology Lab";
   }, []);
 
   return (

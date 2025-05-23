@@ -10,10 +10,10 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-white font-bold text-lg">PL</span>
+                <span className="text-white font-bold text-lg">TL</span>
               </div>
               <div className="font-heading">
-                <h1 className="text-lg font-semibold">HealthPath</h1>
+                <h1 className="text-lg font-semibold">The LABs</h1>
                 <p className="text-xs text-muted-foreground -mt-1">
                   Pathology Lab
                 </p>
@@ -183,7 +183,7 @@ const Footer = () => {
         </div>
         <div className="border-t border-border mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-            © {new Date().getFullYear()} HealthPath Laboratories. All rights reserved.
+            © {new Date().getFullYear()} The LABs. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
             <a href="#" className="text-muted-foreground hover:text-primary btn-transition">

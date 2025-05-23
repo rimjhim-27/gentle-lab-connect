@@ -39,10 +39,10 @@ const Navbar = () => {
       <div className="container flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
           <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-            <span className="text-white font-bold text-lg">PL</span>
+            <span className="text-white font-bold text-lg">TL</span>
           </div>
           <div className="font-heading">
-            <h1 className="text-lg font-semibold">HealthPath</h1>
+            <h1 className="text-lg font-semibold">The LABs</h1>
             <p className="text-xs text-muted-foreground -mt-1">Pathology Lab</p>
           </div>
         </Link>
