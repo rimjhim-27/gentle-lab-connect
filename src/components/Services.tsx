@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardContent,
@@ -29,9 +28,10 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Input } from "@/components/ui/input";
 
 type Service = {
   title: string;
@@ -52,6 +52,9 @@ type Package = {
 const Services = () => {
   const [activeTab, setActiveTab] = useState<"services" | "packages">("services");
   const [openPackage, setOpenPackage] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredServices, setFilteredServices] = useState<Service[]>([]);
+  const [filteredPackages, setFilteredPackages] = useState<Package[]>([]);
 
   const services: Service[] = [
     {
@@ -433,6 +436,32 @@ const Services = () => {
     }
   };
 
+  // Filter services and packages based on search query
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setFilteredServices(services);
+      setFilteredPackages(packages);
+      return;
+    }
+
+    const query = searchQuery.toLowerCase();
+    
+    // Filter services
+    const matchedServices = services.filter(service => 
+      service.title.toLowerCase().includes(query) || 
+      service.description.toLowerCase().includes(query)
+    );
+    setFilteredServices(matchedServices);
+    
+    // Filter packages
+    const matchedPackages = packages.filter(pkg => 
+      pkg.name.toLowerCase().includes(query) || 
+      pkg.description.toLowerCase().includes(query) ||
+      pkg.tests.some(test => test.toLowerCase().includes(query))
+    );
+    setFilteredPackages(matchedPackages);
+  }, [searchQuery]);
+
   return (
     <section id="services" className="section bg-muted/30">
       <div className="container">
@@ -442,6 +471,19 @@ const Services = () => {
             We offer a wide range of diagnostic tests and services with accurate
             results and quick turnaround times.
           </p>
+        </div>
+
+        <div className="mb-6 max-w-md mx-auto">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input 
+              type="text"
+              placeholder="Search tests, packages, or health conditions..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
 
         <div className="mb-8">
@@ -477,134 +519,154 @@ const Services = () => {
           </NavigationMenu>
 
           {activeTab === "services" && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {services.map((service, index) => (
-                <Card
-                  key={index}
-                  className={`transition-all duration-300 hover:shadow-lg ${
-                    service.popular
-                      ? "border-primary/20 bg-primary/5"
-                      : ""
-                  }`}
-                >
-                  {service.popular && (
-                    <div className="absolute -top-3 right-4">
-                      <span className="bg-primary text-primary-foreground text-xs font-medium py-1 px-3 rounded-full">
-                        Popular
-                      </span>
-                    </div>
-                  )}
-                  <CardHeader className="pb-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                      {service.icon}
-                    </div>
-                    <CardTitle className="text-xl">{service.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base">
-                      {service.description}
-                    </CardDescription>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="ghost" className="p-0 h-auto font-medium">
-                      Learn more
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="ml-1"
-                      >
-                        <path d="M5 12h14" />
-                        <path d="m12 5 7 7-7 7" />
-                      </svg>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          )}
-
-          {activeTab === "packages" && (
-            <div className="space-y-6">
-              {packages.map((pkg) => (
-                <Collapsible
-                  key={pkg.id}
-                  open={openPackage === pkg.id}
-                  onOpenChange={() => togglePackage(pkg.id)}
-                  className={cn(
-                    "border rounded-lg bg-card overflow-hidden transition-all duration-200",
-                    openPackage === pkg.id ? "shadow-md" : "",
-                    pkg.popular ? "border-primary/30" : ""
-                  )}
-                >
-                  <div className="flex justify-between items-center p-6">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-xl font-semibold">{pkg.name}</h3>
-                        {pkg.popular && (
+            <>
+              {filteredServices.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No tests found matching your search.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {filteredServices.map((service, index) => (
+                    <Card
+                      key={index}
+                      className={`transition-all duration-300 hover:shadow-lg ${
+                        service.popular
+                          ? "border-primary/20 bg-primary/5"
+                          : ""
+                      }`}
+                    >
+                      {service.popular && (
+                        <div className="absolute -top-3 right-4">
                           <span className="bg-primary text-primary-foreground text-xs font-medium py-1 px-3 rounded-full">
                             Popular
                           </span>
-                        )}
-                      </div>
-                      <p className="text-muted-foreground mt-1">{pkg.description}</p>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <span className="text-lg font-bold">₹{pkg.price}</span>
-                      </div>
-                      <CollapsibleTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          Details
-                          <ChevronDown 
-                            className={cn(
-                              "ml-1 h-4 w-4 transition-transform duration-200",
-                              openPackage === pkg.id ? "rotate-180" : ""
-                            )}
-                          />
+                        </div>
+                      )}
+                      <CardHeader className="pb-4">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                          {service.icon}
+                        </div>
+                        <CardTitle className="text-xl">{service.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <CardDescription className="text-base">
+                          {service.description}
+                        </CardDescription>
+                      </CardContent>
+                      <CardFooter>
+                        <Button variant="ghost" className="p-0 h-auto font-medium">
+                          Learn more
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="ml-1"
+                          >
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                          </svg>
                         </Button>
-                      </CollapsibleTrigger>
-                    </div>
-                  </div>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
 
-                  <CollapsibleContent>
-                    <div className="px-6 pb-6 border-t pt-4">
-                      <h4 className="font-medium mb-3">Included Tests</h4>
-                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
-                        {pkg.tests.map((test, i) => (
-                          <li key={i} className="flex items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="text-primary"
-                            >
-                              <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                            <span>{test}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="mt-6">
-                        <Button>Book This Package</Button>
+          {activeTab === "packages" && (
+            <>
+              {filteredPackages.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">No packages found matching your search.</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {filteredPackages.map((pkg) => (
+                    <Collapsible
+                      key={pkg.id}
+                      open={openPackage === pkg.id}
+                      onOpenChange={() => togglePackage(pkg.id)}
+                      className={cn(
+                        "border rounded-lg bg-card overflow-hidden transition-all duration-200",
+                        openPackage === pkg.id ? "shadow-md" : "",
+                        pkg.popular ? "border-primary/30" : ""
+                      )}
+                    >
+                      <div className="flex justify-between items-center p-6">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-xl font-semibold">{pkg.name}</h3>
+                            {pkg.popular && (
+                              <span className="bg-primary text-primary-foreground text-xs font-medium py-1 px-3 rounded-full">
+                                Popular
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-muted-foreground mt-1">{pkg.description}</p>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <span className="text-lg font-bold">₹{pkg.price}</span>
+                          </div>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="outline" size="sm">
+                              Details
+                              <ChevronDown 
+                                className={cn(
+                                  "ml-1 h-4 w-4 transition-transform duration-200",
+                                  openPackage === pkg.id ? "rotate-180" : ""
+                                )}
+                              />
+                            </Button>
+                          </CollapsibleTrigger>
+                        </div>
                       </div>
-                    </div>
-                  </CollapsibleContent>
-                </Collapsible>
-              ))}
-            </div>
+
+                      <CollapsibleContent>
+                        <div className="px-6 pb-6 border-t pt-4">
+                          <h4 className="font-medium mb-3">Included Tests</h4>
+                          <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+                            {pkg.tests.map((test, i) => (
+                              <li key={i} className="flex items-center gap-2">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="text-primary"
+                                >
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                {searchQuery && test.toLowerCase().includes(searchQuery.toLowerCase()) ? (
+                                  <span className="bg-yellow-100 dark:bg-yellow-900/30">{test}</span>
+                                ) : (
+                                  <span>{test}</span>
+                                )}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="mt-6">
+                            <Button>Book This Package</Button>
+                          </div>
+                        </div>
+                      </CollapsibleContent>
+                    </Collapsible>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
