@@ -23,7 +23,7 @@ const Navbar = () => {
   const navItems = [
     { name: "Home", href: "#" },
     { name: "Services", href: "#services" },
-    { name: "Book a Test", href: "#booking" },
+    { name: "Book Collection", href: "#booking" },
     { name: "Test Reports", href: "#reports" },
     { name: "Contact", href: "#contact" },
   ];
@@ -65,7 +65,7 @@ const Navbar = () => {
             <Phone size={16} className="text-primary" />
             <span className="text-sm font-medium">800-123-4567</span>
           </div>
-          <Button>Book Now</Button>
+          <Button>Book Collection</Button>
         </div>
 
         {/* Mobile Navigation */}
@@ -106,7 +106,7 @@ const Navbar = () => {
                     <Phone size={16} className="text-primary" />
                     <span className="text-sm font-medium">800-123-4567</span>
                   </div>
-                  <Button className="w-full">Book Now</Button>
+                  <Button className="w-full">Book Collection</Button>
                 </div>
               </nav>
             </SheetContent>

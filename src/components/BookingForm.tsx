@@ -40,7 +40,7 @@ const BookingForm = () => {
     // Simulate form submission
     setTimeout(() => {
       setLoading(false);
-      toast.success("Test booking request submitted successfully!", {
+      toast.success("Home collection request submitted successfully!", {
         description: "Our team will contact you to confirm your appointment.",
       });
     }, 1500);
@@ -51,10 +51,9 @@ const BookingForm = () => {
       <div className="container">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-in">
-            <h2 className="text-3xl font-bold mb-4">Book Your Test</h2>
+            <h2 className="text-3xl font-bold mb-4">Book Your Home Collection</h2>
             <p className="text-muted-foreground mb-6">
-              Schedule a test at your convenience. We offer flexible timing and
-              same-day appointments for urgent needs.
+              Schedule a test at your convenience. We'll send our phlebotomist to your home at your preferred time.
             </p>
 
             <div className="space-y-6">
@@ -80,7 +79,7 @@ const BookingForm = () => {
                 <div>
                   <h3 className="font-medium">Simple Booking Process</h3>
                   <p className="text-sm text-muted-foreground">
-                    Book a test in less than 2 minutes with our streamlined form.
+                    Book a home collection in less than 2 minutes with our streamlined form.
                   </p>
                 </div>
               </div>
@@ -129,9 +128,9 @@ const BookingForm = () => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-medium">Home Collection Available</h3>
+                  <h3 className="font-medium">Professional Home Collection</h3>
                   <p className="text-sm text-muted-foreground">
-                    Can't come to us? We'll send a phlebotomist to your location.
+                    Our trained phlebotomists will visit your home for sample collection.
                   </p>
                 </div>
               </div>
@@ -141,9 +140,9 @@ const BookingForm = () => {
           <div>
             <Card className="border border-primary/10">
               <CardHeader>
-                <CardTitle>Schedule Your Appointment</CardTitle>
+                <CardTitle>Schedule Your Home Collection</CardTitle>
                 <CardDescription>
-                  Fill in the details below to book your test appointment.
+                  Fill in the details below to book your home collection appointment.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -174,6 +173,14 @@ const BookingForm = () => {
                         id="phone"
                         type="tel"
                         placeholder="(123) 456-7890"
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address">Full Address</Label>
+                      <Textarea
+                        id="address"
+                        placeholder="Enter your complete address for home collection"
                         required
                       />
                     </div>
@@ -224,16 +231,16 @@ const BookingForm = () => {
                       </Popover>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="collection-type">Collection type</Label>
+                      <Label htmlFor="time-preference">Preferred time</Label>
                       <Select>
-                        <SelectTrigger id="collection-type">
-                          <SelectValue placeholder="Select collection type" />
+                        <SelectTrigger id="time-preference">
+                          <SelectValue placeholder="Select preferred time" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="lab-visit">Lab Visit</SelectItem>
-                          <SelectItem value="home-collection">
-                            Home Collection
-                          </SelectItem>
+                          <SelectItem value="morning">Morning (7am-10am)</SelectItem>
+                          <SelectItem value="mid-day">Mid-day (10am-1pm)</SelectItem>
+                          <SelectItem value="afternoon">Afternoon (1pm-4pm)</SelectItem>
+                          <SelectItem value="evening">Evening (4pm-7pm)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -246,7 +253,7 @@ const BookingForm = () => {
                     </div>
                   </div>
                   <Button type="submit" className="w-full" disabled={loading}>
-                    {loading ? "Processing..." : "Book Appointment"}
+                    {loading ? "Processing..." : "Book Home Collection"}
                   </Button>
                 </form>
               </CardContent>
